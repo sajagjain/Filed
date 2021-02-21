@@ -43,6 +43,8 @@ namespace Filed.Tests
             _paymentService.ProcessPayment(p);
 
             //Assert
+            _paymentStateRepository.Verify(a => a.Save(It.Is<PaymentState>(a => (a.PayState == "processing")
+                || (a.PayState == "processed"))));
             _cheapPaymentGateway.Verify(a => a.ProcessPayment(), Times.AtLeastOnce);
         }
 
@@ -60,6 +62,8 @@ namespace Filed.Tests
             _paymentService.ProcessPayment(p);
 
             //Assert
+            _paymentStateRepository.Verify(a => a.Save(It.Is<PaymentState>(a => (a.PayState == "processing")
+                || (a.PayState == "processed"))));
             _expensivePaymentGateway.Verify(async => async.ProcessPayment(), Times.Once);
         }
 
@@ -77,6 +81,8 @@ namespace Filed.Tests
             _paymentService.ProcessPayment(p);
 
             //Assert
+            _paymentStateRepository.Verify(a => a.Save(It.Is<PaymentState>(a => (a.PayState == "processing")
+                || (a.PayState == "processed"))));
             _cheapPaymentGateway.Verify(async => async.ProcessPayment(), Times.Once);
         }
 
@@ -93,6 +99,8 @@ namespace Filed.Tests
             _paymentService.ProcessPayment(p);
 
             //Assert
+            _paymentStateRepository.Verify(a => a.Save(It.Is<PaymentState>(a => (a.PayState == "processing")
+                || (a.PayState == "processed"))));
             _premiumPaymentGateway.Verify(async => async.ProcessPayment(), Times.Once);
         }
 
@@ -110,6 +118,8 @@ namespace Filed.Tests
 
             //Assert
             Assert.Equal("Premium Payment Failed", ex.Message);
+            _paymentStateRepository.Verify(a => a.Save(It.Is<PaymentState>(a =>  (a.PayState == "processing")
+                || (a.PayState == "failed"))));
             _premiumPaymentGateway.Verify(async => async.ProcessPayment(), Times.Exactly(4));
         }
 
